@@ -521,8 +521,6 @@
 		toc: function() {},
 		html: function(t=null) {
 			var htmls = [], str;
-
-			var start = new Date().getTime();
 			
 			parse(this, t);
 
@@ -547,13 +545,12 @@
 			}
 
 			// 渲染脚注 this.note
-			console.log(this.r[0].note);
-			htmls.push('<hr/>','<p>'+this.note+'</p>');
+			htmls[htmls.length] = '<hr/><h3>注释内容</h3>';
+			for(var n in this.r[0].note) {
+				htmls[htmls.length] = '<p>'+n+'：'+this.r[0].note[n]+'</p>';
+			}
 
 			htmls = htmls.join('');
-			
-			var end = new Date().getTime();
-			console.log(end - start);
 
 			return htmls;
 		},
