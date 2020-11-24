@@ -3,7 +3,7 @@
 // +------------------------------------------------------------------------------------------------
 // | Version	初版
 // | By			春哥 <dev@chun.ge>
-// | Update		2020/06/26
+// | Update		2020/11/25
 // +------------------------------------------------------------------------------------------------
 // 
 "use strict";
@@ -54,7 +54,7 @@
 
 	var Parse = function(t, root) {
 		this.init = false;
-		this.t = t
+		this.t = t 				// 剩余文本内容
 		this.root = root
 
 		this.r = []
@@ -135,12 +135,13 @@
 						arr[rule.block[n][i]] = m[i];
 					}
 				}
+
 				m = null;
 
-				// 含有特例
-				if(n in spec) {
-					// 重新确定类型
-					n = arr.spec||n;
+				// 含有特例，重新确定类型
+				// pre 中
+				if(n in spec && spec[n].indexOf(arr.desc)>0) {
+					n = arr.desc;
 				}
 
 				// 无等级
@@ -169,7 +170,7 @@
 							break;
 						case 'pre':
 							arr.txt		= arr.txt.replace(/\\`\\?`\\?`/g, '```')
-							arr.lang	= arr.spec
+							arr.lang	= arr.desc
 							break;
 						case 'h':
 							arr.lv--;
@@ -320,7 +321,7 @@
 	all.end	= function(){},
 
 	// 特例
-	spec.pre	= ['math', 'gantt', 'mind', 'seq', 'flow', 'graph', 'chart', 'pie'],
+	spec.pre	= ['math', 'gantt', 'mind', 'seq', 'flow', 'graph', 'chart', 'pie', 'echarts'],
 
 	// 可内嵌
 	rows.ul		= 'li',
@@ -346,7 +347,7 @@
 		quote:	[/^(\t*)(?:&gt;|>)(.*)(?:\n|$)/, 'd', 'txt'],
 		ol:		[/^(\t*)([0-9a-zA-Z]+)([.)]) (.*)(?:\n|$)/, 'd', 's', 'tp', 'txt'],// 有序列表
 		ul:		[/^(\t*)[*+-] (.*)(?:\n|$)/, 'd', 'txt'],// 无序列表
-		pre:	[/^`{3} *([a-zA-Z-]*) *\n([\s\S]*?)\n? *`{3} *(?:\n+|$)/, 'spec', 'txt'],
+		pre:	[/^`{3} *([a-zA-Z-]*) *\n([\s\S]*?)\n? *`{3} *(?:\n+|$)/, 'desc', 'txt'],
 		math:	[/^\$\$ *\n([\s\S]*?)\n\$\$ *(?:\n|$)/, 'txt'],
 		id:		[/^\[([a-zA-Z0-9]*)\]\: *([--:=?-Z_a-z]+) *("(?:.*)"|'(?:.*)'|\((?:.*)\))? *(?:\{(.*)\})? *(?:\n|$)/, 'id', 'link', 'title', 'opts'],
 		note:	[/^\[\^([a-zA-Z0-9]+)\]\: *(.+)(?:\n|$)/, 'id', 'txt'],
@@ -406,7 +407,7 @@
 		hr:		'<hr class="">',
 		tip:	'<p class="tip {{tip}}">{{txt}}</p>',//n.txt.replace(/\n(?!$)/g, '<br/>')
 		excerpt:'<p class="article-excerpt">{{txt}}</p>',//n.txt.replace(/\n(?!$)/g, '')// 摘要
-		pre: 	'<pre class="code-wrap lang-{{spec}}">{{txt}}</pre>',
+		pre: 	'<pre class="code-wrap lang-{{desc}}">{{txt}}</pre>',
 		math:	'<math class="block">{{txt}}</math>',
 		echarts:'<div class="chart" style="width:600px;height:400px;">{ {{txt}} }</div>',// chart图、表
 		txt:	'<p class="txt">{{txt}}</p>',
@@ -509,10 +510,10 @@
 
 		var txt = new Parse(t, o.c.nodes);
 
-		r[1] = txt.get('r');
-		r[0].h = txt.get('h');
-		r[0].id = txt.get('id');
-		r[0].note = txt.get('note');
+		r[1]		= txt.get('r');
+		r[0].h		= txt.get('h');
+		r[0].id 	= txt.get('id');
+		r[0].note	= txt.get('note');
 
 		o.r = r;
 	}
@@ -535,7 +536,7 @@
 					for(var k in n) {
 				        str = str.replace(new RegExp('\{\{'+k+'\}\}', 'g'), n[k]);
 				    }
-				} else if(typeof render.html[n.type] == 'function') {//console.log(n)
+				} else if(typeof render.html[n.type] == 'function') {
 					// 函数//htmls[htmls.length] = 
 					str = render.html[n.type](n);
 				}

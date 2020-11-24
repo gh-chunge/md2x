@@ -10,8 +10,8 @@ ty.set({
         'katex':        'https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js',
         'raphael':      'https://libs.cdnjs.net/raphael/2.3.0/raphael.min.js',
         'flowchart':    'https://libs.cdnjs.net/flowchart/1.13.0/flowchart.min.js',
-        'md2x':         'https://chun.ge/js/md2x.js',
-        'mermaid':      'https://libs.cdnjs.net/mermaid/8.5.2/mermaid.min.js',
+        'md2x':         '../md2x.js',
+        'mermaid':      'https://chun.ge/js/mermaid.min.js',
         'echarts':      'https://cdn.jsdelivr.net/npm/vditor@3.2.12/dist/js/echarts/echarts.min.js'
         // 多链接备用
     },
